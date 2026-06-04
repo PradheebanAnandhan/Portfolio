@@ -251,7 +251,7 @@ export const ProjectsOutput: React.FC<ProjectsOutputProps> = ({ project }) => {
     <div className="space-y-3 font-mono text-sm max-w-2xl">
       <div className="text-yellow-400 font-bold">📁 Featured Projects:</div>
       <div className="space-y-2">
-        {projects.map((proj, idx) => (
+        {projects.map((proj) => (
           <div key={proj.id} className="border border-gray-800 p-2.5 rounded bg-gray-950/40 hover:border-gray-700 transition">
             <div className="flex items-center justify-between">
               <span className="text-white font-bold">{proj.name}</span>
@@ -663,8 +663,8 @@ export const ViewResumeOutput: React.FC = () => {
       <div className="space-y-3">
         <div className="text-[#50fa7b] font-bold uppercase tracking-wider border-b border-gray-700 pb-1">Key Projects</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {projects.map((proj, idx) => (
-            <div key={idx} className="space-y-1">
+          {projects.map((proj) => (
+            <div key={proj.id} className="space-y-1">
               <div className="text-[#ff79c6] font-bold flex items-center justify-between">
                 {proj.name}
                 <span className="text-xs text-gray-500 font-normal">{proj.technologies.slice(0, 2).join(', ')}</span>
