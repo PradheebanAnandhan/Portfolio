@@ -67,8 +67,8 @@ export const useTerminal = (
     return path.length === 0 ? '~' : `~/${path.join('/')}`;
   };
 
-  const getSuggestions = (input: string): string => {
-    if (!input.trim()) return '';
+  const getSuggestions = (input: string): string[] => {
+    if (!input.trim()) return [];
 
     const commands = [
       'help', 'about', 'skills', 'projects', 'contact', 'resume',
@@ -82,20 +82,19 @@ export const useTerminal = (
     const parts = input.split(/\s+/);
     const cmd = parts[0].toLowerCase();
 
-    // 1. Suggesting commands
+    // 1. Suggesting commands — return ALL prefix matches, best (shortest) first
     if (parts.length === 1) {
-      const match = commands.find(c => c.startsWith(cmd) && c !== cmd);
-      if (match) {
-        return match;
-      }
-      return '';
+      const matches = commands
+        .filter(c => c.startsWith(cmd) && c !== cmd)
+        .sort((a, b) => a.length - b.length);
+      return matches;
     }
 
     // 2. Suggesting files/directories for cd, cat, ls
     if (['cd', 'cat', 'ls'].includes(cmd) && parts.length === 2) {
       const arg = parts[1];
       const currentNode = getNodeAtPath(vfs, currentPath);
-      if (!currentNode) return '';
+      if (!currentNode) return [];
 
       const lastSlashIdx = arg.lastIndexOf('/');
       let dirPath = '';
@@ -106,26 +105,27 @@ export const useTerminal = (
         searchPrefix = arg.substring(lastSlashIdx + 1);
       }
 
-      // Resolve targeted dir to search children within
       const resolved = resolvePath(vfs, currentPath, dirPath || '.');
       if (resolved.node && resolved.node.type === 'directory') {
         const children = (resolved.node as DirectoryNode).children;
         const keys = Object.keys(children);
 
-        const match = keys.find(key => {
-          const isDir = children[key].type === 'directory';
-          if (cmd === 'cd' && !isDir) return false; // cd only autocompletes directories
-          return key.startsWith(searchPrefix) && key !== searchPrefix;
-        });
+        const matches = keys
+          .filter(key => {
+            const isDir = children[key].type === 'directory';
+            if (cmd === 'cd' && !isDir) return false;
+            return key.startsWith(searchPrefix) && key !== searchPrefix;
+          })
+          .map(match => {
+            const completedPath = dirPath ? `${dirPath}/${match}` : match;
+            return `${parts[0]} ${completedPath}`;
+          });
 
-        if (match) {
-          const completedPath = dirPath ? `${dirPath}/${match}` : match;
-          return `${parts[0]} ${completedPath}`;
-        }
+        return matches;
       }
     }
 
-    return '';
+    return [];
   };
 
   const executeCommand = (cmdStr: string) => {

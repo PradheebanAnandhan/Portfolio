@@ -38,17 +38,24 @@ export const Terminal: React.FC<TerminalProps> = ({ theme, setTheme }) => {
     inputRef.current?.focus();
   }, []);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const suggestion = getSuggestions(currentInput);
+  // All matches — used for the mobile suggestion bar
+  const allSuggestions = getSuggestions(currentInput);
+  // Best single match — used for the desktop inline ghost text
+  const bestSuggestion = allSuggestions[0] ?? '';
 
+  // Accept the top suggestion (desktop Tab / ArrowRight)
+  const acceptSuggestion = (value: string) => {
+    setCurrentInput(value);
+    inputRef.current?.focus();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       executeCommand(currentInput);
       setCurrentInput('');
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      if (suggestion) {
-        setCurrentInput(suggestion);
-      }
+      if (bestSuggestion) acceptSuggestion(bestSuggestion);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (history.length === 0) return;
@@ -74,23 +81,21 @@ export const Terminal: React.FC<TerminalProps> = ({ theme, setTheme }) => {
         setHistoryIndex(nextIndex);
         setCurrentInput(history[nextIndex]);
       }
-    } else if (e.key === 'ArrowRight' || e.key === 'Tab') {
-      // Autocomplete if cursor is at the end of the text
+    } else if (e.key === 'ArrowRight') {
       const cursorPosition = e.currentTarget.selectionStart;
-      if (cursorPosition === currentInput.length && suggestion) {
+      if (cursorPosition === currentInput.length && bestSuggestion) {
         e.preventDefault();
-        setCurrentInput(suggestion);
+        acceptSuggestion(bestSuggestion);
       }
     } else if (e.key === 'Escape') {
       setCurrentInput('');
     }
   };
 
-  // Get faint suggestion display text
-  const suggestionText = getSuggestions(currentInput);
+  // Inline ghost text: only show the suffix the user hasn't typed yet
   let inlineSuggestion = '';
-  if (suggestionText && suggestionText.toLowerCase().startsWith(currentInput.toLowerCase())) {
-    inlineSuggestion = suggestionText.substring(currentInput.length);
+  if (bestSuggestion && bestSuggestion.toLowerCase().startsWith(currentInput.toLowerCase())) {
+    inlineSuggestion = bestSuggestion.substring(currentInput.length);
   }
 
   // Theme-specific CSS classes
@@ -208,32 +213,61 @@ export const Terminal: React.FC<TerminalProps> = ({ theme, setTheme }) => {
 
         {/* Current Command Prompt input line */}
         {!isExecuting && (
-          <div className="flex items-center leading-relaxed relative">
-            <span className={`${style.promptUser}`}>guest@pradheeban</span>
-            <span className="text-gray-400 mx-1">:</span>
-            <span className={`${style.promptPath}`}>{currentPath}</span>
-            <span className="text-gray-300 mx-1">$</span>
-            
-            <div className="flex-1 relative flex items-center pl-1">
-              {/* Input Overlay for suggestions */}
-              <div className="absolute inset-y-0 left-1 flex items-center pointer-events-none">
-                <span className="text-transparent select-none">{currentInput}</span>
-                <span className="text-gray-500 opacity-60 font-semibold select-none">{inlineSuggestion}</span>
-              </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center leading-relaxed relative">
+              <span className={`${style.promptUser}`}>guest@pradheeban</span>
+              <span className="text-gray-400 mx-1">:</span>
+              <span className={`${style.promptPath}`}>{currentPath}</span>
+              <span className="text-gray-300 mx-1">$</span>
 
-              <input
-                ref={inputRef}
-                type="text"
-                value={currentInput}
-                onChange={(e) => setCurrentInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className={`w-full bg-transparent border-none outline-none focus:ring-0 p-0 font-mono text-xs md:text-sm font-bold caret-current ${style.inputAccent}`}
-                autoComplete="off"
-                autoCapitalize="none"
-                autoCorrect="off"
-                spellCheck="false"
-              />
+              <div className="flex-1 relative flex items-center pl-1">
+                {/* Desktop inline ghost text */}
+                <div className="absolute inset-y-0 left-1 flex items-center pointer-events-none">
+                  <span className="text-transparent select-none">{currentInput}</span>
+                  <span className="text-gray-500 opacity-60 font-semibold select-none">{inlineSuggestion}</span>
+                </div>
+
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={currentInput}
+                  onChange={(e) => setCurrentInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className={`w-full bg-transparent border-none outline-none focus:ring-0 p-0 font-mono text-xs md:text-sm font-bold caret-current ${style.inputAccent}`}
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  enterKeyHint="send"
+                  inputMode="text"
+                />
+              </div>
             </div>
+
+            {/* ── Mobile Suggestion Bar (hidden on desktop) ── */}
+            {allSuggestions.length > 0 && (
+              <div className="flex md:hidden items-center gap-1.5 overflow-x-auto scrollbar-none pl-1 pb-0.5">
+                <span className="text-gray-600 text-[10px] font-mono flex-shrink-0 select-none">
+                  tab:
+                </span>
+                {allSuggestions.slice(0, 8).map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    onPointerDown={(e) => {
+                      // onPointerDown fires before the input loses focus,
+                      // allowing us to set the value without a focus/blur race
+                      e.preventDefault();
+                      acceptSuggestion(suggestion);
+                    }}
+                    className="flex-shrink-0 font-mono text-[11px] px-2 py-0.5 rounded border border-gray-700 bg-gray-900/60 text-[#50fa7b] hover:border-[#50fa7b]/60 hover:bg-[#50fa7b]/10 active:scale-95 transition-all duration-100 cursor-pointer select-none"
+                    tabIndex={-1}
+                    aria-label={`Autocomplete: ${suggestion}`}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
