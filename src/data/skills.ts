@@ -14,7 +14,7 @@ export const skills: SkillGroup[] = [
   },
   {
     category: "Web & Backend",
-    items: ["HTML", "CSS", "React.js", "Node.js", "Express.js", "REST APIs"]
+    items: ["HTML", "CSS", "TypeScript", "React.js", "Node.js", "Express.js", "REST APIs"]
   },
   {
     category: "Core & Data",

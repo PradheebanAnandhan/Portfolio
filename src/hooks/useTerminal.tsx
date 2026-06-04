@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { DirectoryNode, FileNode } from '../types/fs';
 import { initializeVFS, resolvePath, getNodeAtPath, generateTreeString } from '../utils/fileSystem';
 import { profile, education, experience, certifications, projects } from '../data';
+import { HelpOutput, NeofetchOutput, SkillsOutput, ProjectsOutput, SudoHireMeOutput, CoffeeOutput, AchievementsOutput, PublicationsOutput, LearningOutput, StackOutput, ResumeSummaryOutput, ViewResumeOutput, WhoAmIOutput } from '../components/TerminalOutputs';
+import { AnalyticsOutput } from '../components/AnalyticsOutput';
 
 export interface TerminalLine {
   id: string;
@@ -23,12 +25,36 @@ export const useTerminal = (
       id: 'welcome',
       dir: '~',
       output: (
-        <div className="space-y-1 mt-2">
+        <div className="space-y-3 mt-2 font-mono text-sm">
           <div className="text-yellow-400 font-bold text-base md:text-lg">
             Welcome to Pradheeban's Terminal Portfolio
           </div>
-          <div className="text-gray-300">
-            Type <span className="text-[#50fa7b] font-bold">help</span> to explore my portfolio.
+          <div className="text-gray-400 text-xs">
+            You are logged in as: <span className="text-[#8be9fd] font-bold">recruiter@pradheeban.dev</span>
+          </div>
+          <div className="space-y-1">
+            <div className="text-[#ff79c6] font-semibold text-xs uppercase tracking-widest mb-1">Quick Start</div>
+            <div className="grid grid-cols-1 gap-0.5">
+              <div className="flex">
+                <span className="text-[#50fa7b] font-bold w-28 flex-shrink-0">neofetch</span>
+                <span className="text-gray-400">— See who I am</span>
+              </div>
+              <div className="flex">
+                <span className="text-[#50fa7b] font-bold w-28 flex-shrink-0">sudo hire-me</span>
+                <span className="text-gray-400">— Why you should hire me</span>
+              </div>
+              <div className="flex">
+                <span className="text-[#50fa7b] font-bold w-28 flex-shrink-0">resume</span>
+                <span className="text-gray-400">— View / download my resume</span>
+              </div>
+              <div className="flex">
+                <span className="text-[#50fa7b] font-bold w-28 flex-shrink-0">projects</span>
+                <span className="text-gray-400">— My featured work</span>
+              </div>
+            </div>
+          </div>
+          <div className="text-gray-500 text-xs">
+            Type <span className="text-[#50fa7b] font-bold">help</span> for all {30}+ commands.
           </div>
         </div>
       )
@@ -49,7 +75,8 @@ export const useTerminal = (
       'education', 'experience', 'certs', 'clear', 'whoami', 'pwd', 'ls',
       'tree', 'neofetch', 'theme', 'sudo hire-me', 'hack nasa', 'coffee',
       'achievements', 'publications', 'learning', 'stack', 'analytics',
-      'view resume', 'download resume', 'github', 'linkedin', 'email'
+      'view resume', 'download resume', 'github', 'linkedin', 'email',
+      'history', 'date', 'status'
     ];
 
     const parts = input.split(/\s+/);
@@ -134,17 +161,24 @@ export const useTerminal = (
     let isError = false;
     let newPath = [...currentPath];
 
-    // Dynamic Imports or direct renders for Rich Components
-    import('../components/TerminalOutputs').then(({ HelpOutput, NeofetchOutput, SkillsOutput, ProjectsOutput, SudoHireMeOutput, CoffeeOutput, AchievementsOutput, PublicationsOutput, LearningOutput, StackOutput, ResumeSummaryOutput, ViewResumeOutput, WhoAmIOutput }) => {
-      import('../components/AnalyticsOutput').then(({ AnalyticsOutput }) => {
-        switch (command) {
+    const executeSwitch = () => {
+      switch (command) {
         case 'help':
           output = <HelpOutput />;
           break;
         case 'about':
           output = (
-            <div className="text-gray-200 leading-relaxed font-mono">
-              {profile.about}
+            <div className="space-y-4 font-mono text-sm max-w-2xl">
+              <div>
+                <div className="text-[#8be9fd] font-bold text-base">{profile.name}</div>
+                <div className="text-[#ff79c6] text-xs font-semibold tracking-widest uppercase mt-0.5">{profile.role}</div>
+              </div>
+              <div className="text-gray-300 leading-relaxed border-l-2 border-[#50fa7b]/40 pl-3">
+                {profile.about}
+              </div>
+              <div className="text-gray-600 text-xs border-t border-gray-800 pt-2">
+                See also: <span className="text-[#50fa7b]">experience</span> · <span className="text-[#50fa7b]">publications</span> · <span className="text-[#50fa7b]">projects</span> · <span className="text-[#50fa7b]">contact</span>
+              </div>
             </div>
           );
           break;
@@ -300,6 +334,67 @@ export const useTerminal = (
         case 'analytics':
           output = <AnalyticsOutput />;
           break;
+        case 'history': {
+          if (history.length === 0) {
+            output = <div className="text-gray-500 font-mono">No commands in history.</div>;
+          } else {
+            output = (
+              <div className="font-mono text-sm space-y-0.5 max-h-48 overflow-y-auto">
+                {history.map((cmd, idx) => (
+                  <div key={idx} className="flex">
+                    <span className="text-gray-600 w-8 text-right mr-3 flex-shrink-0">{history.length - history.length + idx + 1}</span>
+                    <span className="text-gray-300">{cmd}</span>
+                  </div>
+                ))}
+              </div>
+            );
+          }
+          break;
+        }
+        case 'status':
+          output = (
+            <div className="space-y-3 font-mono text-sm max-w-md">
+              <div className="text-[#8be9fd] font-bold tracking-widest border-b border-gray-800 pb-1">CANDIDATE STATUS</div>
+              <div className="space-y-1.5 text-gray-200">
+                <div className="flex">
+                  <span className="w-32 text-[#ffb86c] flex-shrink-0">Availability</span>
+                  <span className="text-gray-400 mr-2">:</span>
+                  <span className="text-[#50fa7b] font-bold">AVAILABLE 🟢</span>
+                </div>
+                <div className="flex">
+                  <span className="w-32 text-[#ffb86c] flex-shrink-0">Open to</span>
+                  <span className="text-gray-400 mr-2">:</span>
+                  <span>Full-time / Contract / Internship</span>
+                </div>
+                <div className="flex">
+                  <span className="w-32 text-[#ffb86c] flex-shrink-0">Roles</span>
+                  <span className="text-gray-400 mr-2">:</span>
+                  <span>AI/ML Engineer, Software Developer</span>
+                </div>
+                <div className="flex">
+                  <span className="w-32 text-[#ffb86c] flex-shrink-0">Location</span>
+                  <span className="text-gray-400 mr-2">:</span>
+                  <span>{profile.location} (Remote OK)</span>
+                </div>
+                <div className="flex">
+                  <span className="w-32 text-[#ffb86c] flex-shrink-0">Response</span>
+                  <span className="text-gray-400 mr-2">:</span>
+                  <span className="text-[#8be9fd]">{'< 24 hours'}</span>
+                </div>
+                <div className="flex">
+                  <span className="w-32 text-[#ffb86c] flex-shrink-0">Contact</span>
+                  <span className="text-gray-400 mr-2">:</span>
+                  <a href={`mailto:${profile.email}`} className="text-[#ff79c6] hover:underline">{profile.email}</a>
+                </div>
+              </div>
+            </div>
+          );
+          break;
+        case 'date': {
+          const now = new Date();
+          output = <div className="text-gray-300 font-mono">{now.toDateString()} {now.toLocaleTimeString()}</div>;
+          break;
+        }
         case 'clear':
           setLines([]);
           return;
@@ -465,8 +560,9 @@ export const useTerminal = (
       }
 
       setLines(prev => [...prev, promptLine, { id: Math.random().toString(), dir: getPathString(newPath), output, isError }]);
-      });
-    });
+    };
+
+    executeSwitch();
   };
 
   return {

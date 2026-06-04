@@ -51,6 +51,9 @@ export const HelpOutput: React.FC = () => {
         { cmd: 'help', desc: 'Show all available commands' },
         { cmd: 'theme', desc: 'Switch terminal themes' },
         { cmd: 'analytics', desc: 'View portfolio statistics' },
+        { cmd: 'history', desc: 'Show command history' },
+        { cmd: 'date', desc: 'Show current date and time' },
+        { cmd: 'status', desc: 'Candidate availability status' },
       ]
     },
     {
@@ -90,7 +93,6 @@ export const HelpOutput: React.FC = () => {
   );
 };
 
-// 2. NEOFETCH OUTPUT COMPONENT
 // 2. NEOFETCH OUTPUT COMPONENT
 export const NeofetchOutput: React.FC = () => {
   const asciiArt = `
@@ -216,14 +218,20 @@ export const ProjectsOutput: React.FC<ProjectsOutputProps> = ({ project }) => {
           </span>
         </div>
         <div className="flex gap-4 pt-1 flex-wrap">
-          <a
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[#ff79c6] hover:underline font-bold flex items-center gap-1"
-          >
-            🐙 GitHub
-          </a>
+          {project.githubUrl ? (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#ff79c6] hover:underline font-bold flex items-center gap-1"
+            >
+              🐙 GitHub
+            </a>
+          ) : (
+            <span className="text-gray-600 font-mono text-xs border border-gray-700 px-1.5 py-0.5 rounded">
+              🔒 Private Repository
+            </span>
+          )}
           {project.demoUrl && (
             <a
               href={project.demoUrl}
@@ -505,27 +513,50 @@ export const LearningOutput: React.FC = () => {
   );
 };
 
-// 10. STACK OUTPUT COMPONENT
+// 10. STACK OUTPUT COMPONENT — shows tooling, frameworks, and dev environment
 export const StackOutput: React.FC = () => {
-  // We can group skills or hardcode based on the prompt's requested format
-  // Since we already have the modular skills object, let's format it.
+  const stackGroups = [
+    {
+      label: 'AI / ML Tooling',
+      icon: '🤖',
+      tools: ['Python', 'LangChain', 'LangGraph', 'Hugging Face', 'Streamlit', 'Ollama']
+    },
+    {
+      label: 'Frontend',
+      icon: '🖥️',
+      tools: ['React.js', 'TypeScript', 'Vite', 'Tailwind CSS', 'HTML/CSS']
+    },
+    {
+      label: 'Backend & APIs',
+      icon: '⚙️',
+      tools: ['Node.js', 'Express.js', 'REST APIs', 'Supabase', 'PostgreSQL']
+    },
+    {
+      label: 'Dev & Ops',
+      icon: '🛠️',
+      tools: ['Git', 'GitHub', 'Docker', 'VS Code', 'Linux']
+    },
+    {
+      label: 'Cloud & Infra',
+      icon: '☁️',
+      tools: ['AWS (Cloud Practitioner)', 'Google Cloud ML APIs']
+    }
+  ];
+
   return (
-    <div className="space-y-4 font-mono text-sm max-w-xl text-gray-200">
-      <div className="text-[#50fa7b] font-bold underline">Tech Stack</div>
+    <div className="space-y-4 font-mono text-sm max-w-2xl">
+      <div className="text-[#50fa7b] font-bold tracking-widest border-b border-gray-800 pb-1">TECH STACK</div>
+      <div className="text-gray-500 text-xs mb-2">Tools, frameworks, and environments I actively work with.</div>
       <div className="space-y-3">
-        {skills.map((group, i) => (
-          <div key={i}>
-            <div className="text-[#ffb86c] font-semibold mb-1">{group.category}:</div>
-            <ul className="pl-2">
-              {group.items.map((item, j) => (
-                <li key={j} className="flex items-center gap-2 text-gray-300">
-                  <span className="text-[#8be9fd] text-xs">*</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+        {stackGroups.map((group, i) => (
+          <div key={i} className="grid grid-cols-[160px_1fr] items-start">
+            <span className="text-[#ffb86c] font-semibold">{group.icon} {group.label}</span>
+            <span className="text-gray-300">{group.tools.join(' · ')}</span>
           </div>
         ))}
+      </div>
+      <div className="text-gray-600 text-xs border-t border-gray-800 pt-2">
+        See also: <span className="text-[#50fa7b]">skills</span> — for a categorized skills index
       </div>
     </div>
   );
@@ -542,7 +573,7 @@ export const ResumeSummaryOutput: React.FC = () => {
         <div className="space-y-1">
           <div><span className="text-[#8be9fd] font-bold">Name:</span> {profile.name}</div>
           <div><span className="text-[#8be9fd] font-bold">Role:</span> {profile.role}</div>
-          <div><span className="text-[#8be9fd] font-bold">Experience:</span> {profile.experienceYears}+ Years</div>
+          <div><span className="text-[#8be9fd] font-bold">Experience:</span> {experience.length > 0 ? `${new Date().getFullYear() - parseInt(experience[experience.length - 1].period.split(' ')[2] || String(new Date().getFullYear()))}+ Years` : '1+ Years'}</div>
         </div>
         <div className="space-y-1">
           <div><span className="text-[#50fa7b] font-bold">Projects:</span> {projects.length}</div>

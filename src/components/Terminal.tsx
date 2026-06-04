@@ -179,7 +179,11 @@ export const Terminal: React.FC<TerminalProps> = ({ theme, setTheme }) => {
       </div>
 
       {/* Terminal Body */}
-      <div className="flex-1 p-4 md:p-6 overflow-y-auto font-mono text-xs md:text-sm space-y-3 scrollbar-thin scrollbar-thumb-white/10 relative">
+      <div
+        className="flex-1 p-4 md:p-6 overflow-y-auto font-mono text-xs md:text-sm space-y-3 scrollbar-thin scrollbar-thumb-white/10 relative"
+        aria-live="polite"
+        aria-label="Terminal output"
+      >
         {/* Output lines */}
         {lines.map((line) => (
           <div key={line.id} className="space-y-1">
