@@ -35,6 +35,7 @@ export const useTerminal = (
     }
   ]);
   const [currentInput, setCurrentInput] = useState('');
+  const [isExecuting, setIsExecuting] = useState(false);
 
   const getPathString = (path: string[]) => {
     return path.length === 0 ? '~' : `~/${path.join('/')}`;
@@ -44,11 +45,11 @@ export const useTerminal = (
     if (!input.trim()) return '';
 
     const commands = [
-      'help', 'about', 'skills', 'projects', 'contact', 'resume', 'social',
+      'help', 'about', 'skills', 'projects', 'contact', 'resume',
       'education', 'experience', 'certs', 'clear', 'whoami', 'pwd', 'ls',
       'tree', 'neofetch', 'theme', 'sudo hire-me', 'hack nasa', 'coffee',
       'achievements', 'publications', 'learning', 'stack', 'analytics',
-      'view resume', 'download resume'
+      'view resume', 'download resume', 'github', 'linkedin', 'email'
     ];
 
     const parts = input.split(/\s+/);
@@ -134,7 +135,7 @@ export const useTerminal = (
     let newPath = [...currentPath];
 
     // Dynamic Imports or direct renders for Rich Components
-    import('../components/TerminalOutputs').then(({ HelpOutput, NeofetchOutput, SkillsOutput, ProjectsOutput, SudoHireMeOutput, CoffeeOutput, AchievementsOutput, PublicationsOutput, LearningOutput, StackOutput, ResumeSummaryOutput, ViewResumeOutput }) => {
+    import('../components/TerminalOutputs').then(({ HelpOutput, NeofetchOutput, SkillsOutput, ProjectsOutput, SudoHireMeOutput, CoffeeOutput, AchievementsOutput, PublicationsOutput, LearningOutput, StackOutput, ResumeSummaryOutput, ViewResumeOutput, WhoAmIOutput }) => {
       import('../components/AnalyticsOutput').then(({ AnalyticsOutput }) => {
         switch (command) {
         case 'help':
@@ -156,12 +157,45 @@ export const useTerminal = (
         }
         case 'contact':
           output = (
-            <div className="space-y-1 font-mono text-gray-200">
-              <div className="text-[#8be9fd] font-bold">Contact:</div>
-              <div>Email: <a href={`mailto:${profile.email}`} className="text-[#ff79c6] hover:underline font-bold">{profile.email}</a></div>
-              <div>LinkedIn: <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="text-[#ff79c6] hover:underline font-bold">linkedin.com/in/pradheeban</a></div>
-              <div>GitHub: <a href={profile.github} target="_blank" rel="noopener noreferrer" className="text-[#ff79c6] hover:underline font-bold">github.com/pradheeban</a></div>
-              <div>Portfolio: <a href={profile.portfolioUrl} className="text-[#ff79c6] hover:underline font-bold">pradheeban.dev</a></div>
+            <div className="space-y-4 font-mono text-gray-200 max-w-xl">
+              <div>
+                <div className="text-[#8be9fd] font-bold tracking-widest mb-1">CONTACT INFORMATION</div>
+                <div className="text-gray-500">{'─'.repeat(18)}</div>
+              </div>
+              
+              <div className="space-y-1">
+                <div className="flex">
+                  <span className="w-32 text-[#ffb86c]">Email</span>
+                  <span className="text-gray-400 mr-2">:</span>
+                  <a href={`mailto:${profile.email}`} className="text-[#ff79c6] hover:underline font-bold">
+                    {profile.email}
+                  </a>
+                </div>
+                <div className="flex">
+                  <span className="w-32 text-[#ffb86c]">Location</span>
+                  <span className="text-gray-400 mr-2">:</span>
+                  <span className="text-gray-300">{profile.location}</span>
+                </div>
+                <div className="flex">
+                  <span className="w-32 text-[#ffb86c]">Availability</span>
+                  <span className="text-gray-400 mr-2">:</span>
+                  <span className="text-[#50fa7b] font-bold">Open to Opportunities 🚀</span>
+                </div>
+              </div>
+
+              <div>
+                <div className="text-[#8be9fd] mb-1">Preferred Roles:</div>
+                <ul className="space-y-0.5">
+                  <li className="flex"><span className="text-gray-400 mr-2">•</span><span className="text-gray-300">AI/ML Engineer</span></li>
+                  <li className="flex"><span className="text-gray-400 mr-2">•</span><span className="text-gray-300">Software Developer</span></li>
+                  <li className="flex"><span className="text-gray-400 mr-2">•</span><span className="text-gray-300">Backend Developer</span></li>
+                </ul>
+              </div>
+
+              <div>
+                <div className="text-[#8be9fd] mb-1">Response Time:</div>
+                <div className="text-gray-300">&lt; 24 Hours</div>
+              </div>
             </div>
           );
           break;
@@ -194,15 +228,17 @@ export const useTerminal = (
             isError = true;
           }
           break;
-        case 'social':
-          output = (
-            <div className="space-y-1 font-mono">
-              <div className="text-[#8be9fd] font-bold">Social Media Profiles:</div>
-              <div>GitHub: <a href={profile.github} target="_blank" rel="noreferrer" className="text-[#ff79c6] hover:underline font-bold">{profile.github}</a></div>
-              <div>LinkedIn: <a href={profile.linkedin} target="_blank" rel="noreferrer" className="text-[#ff79c6] hover:underline font-bold">{profile.linkedin}</a></div>
-              <div>Twitter/X: <a href={profile.twitter} target="_blank" rel="noreferrer" className="text-[#ff79c6] hover:underline font-bold">{profile.twitter}</a></div>
-            </div>
-          );
+        case 'github':
+          window.open(profile.github, '_blank');
+          output = <div className="text-[#50fa7b] font-mono">Opening GitHub profile... 🐙</div>;
+          break;
+        case 'linkedin':
+          window.open(profile.linkedin, '_blank');
+          output = <div className="text-[#50fa7b] font-mono">Opening LinkedIn profile... 💼</div>;
+          break;
+        case 'email':
+          navigator.clipboard.writeText(profile.email).catch(() => {});
+          output = <div className="text-[#50fa7b] font-mono">Email copied to clipboard ✓</div>;
           break;
         case 'education':
           output = (
@@ -268,11 +304,7 @@ export const useTerminal = (
           setLines([]);
           return;
         case 'whoami':
-          output = (
-            <div className="text-[#8be9fd] font-mono">
-              guest@pradheeban.dev (Role: recruiter/explorer)
-            </div>
-          );
+          output = <WhoAmIOutput />;
           break;
         case 'pwd':
           output = <div className="text-gray-300 font-mono">/{currentPath.join('/')}</div>;
@@ -420,7 +452,8 @@ export const useTerminal = (
           break;
         }
         case 'coffee':
-          output = <CoffeeOutput />;
+          setIsExecuting(true);
+          output = <CoffeeOutput onComplete={() => setIsExecuting(false)} />;
           break;
         default:
           output = (
@@ -445,6 +478,7 @@ export const useTerminal = (
     history,
     historyIndex,
     setHistoryIndex,
-    getSuggestions
+    getSuggestions,
+    isExecuting
   };
 };

@@ -1,6 +1,17 @@
 import type { VNode, DirectoryNode } from '../types/fs';
 import { profile, skills, experience, education, projects, achievements, publications, currentlyLearning } from '../data';
 
+// Utility to generate concise project filenames
+export const generateSlug = (name: string): string => {
+  // Take the primary part of the name before dashes or colons
+  const conciseName = name.split(/[-–—:]/)[0].trim();
+  return conciseName
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+};
+
 // Helper to format skills list
 const formatSkills = (): string => {
   return skills
@@ -104,23 +115,15 @@ export const initializeVFS = (): DirectoryNode => {
       'projects': {
         type: 'directory',
         name: 'projects',
-        children: {
-          'project1.md': {
+        children: projects.reduce((acc, proj) => {
+          const slug = `${generateSlug(proj.name)}.md`;
+          acc[slug] = {
             type: 'file',
-            name: 'project1.md',
-            content: projects[0].content
-          },
-          'project2.md': {
-            type: 'file',
-            name: 'project2.md',
-            content: projects[1].content
-          },
-          'project3.md': {
-            type: 'file',
-            name: 'project3.md',
-            content: projects[2].content
-          }
-        }
+            name: slug,
+            content: proj.content
+          };
+          return acc;
+        }, {} as Record<string, VNode>)
       }
     }
   };
@@ -200,24 +203,28 @@ export const getNodeAtPath = (root: DirectoryNode, path: string[]): DirectoryNod
 };
 
 // Generate tree print-out
-export const generateTreeString = (node: VNode, nameOverride = '/'): string => {
+export const generateTreeString = (node: VNode, nameOverride = '.'): string => {
   const lines: string[] = [];
+  lines.push(nameOverride);
 
-  const traverse = (currentNode: VNode, prefix: string, isLast: boolean, name: string) => {
-    const currentName = name;
-    const connector = isLast ? '└── ' : '├── ';
-    lines.push(prefix + (prefix ? connector : '') + currentName);
+  const traverse = (currentNode: DirectoryNode, prefix: string) => {
+    const childrenKeys = Object.keys(currentNode.children);
+    childrenKeys.forEach((key, idx) => {
+      const isLast = idx === childrenKeys.length - 1;
+      const childNode = currentNode.children[key];
+      const connector = isLast ? '└── ' : '├── ';
+      lines.push(prefix + connector + key);
 
-    if (currentNode.type === 'directory') {
-      const childrenKeys = Object.keys(currentNode.children);
-      const newPrefix = prefix + (prefix ? (isLast ? '    ' : '│   ') : '');
-      childrenKeys.forEach((key, idx) => {
-        const childNode = currentNode.children[key];
-        traverse(childNode, newPrefix, idx === childrenKeys.length - 1, key);
-      });
-    }
+      if (childNode.type === 'directory') {
+        const newPrefix = prefix + (isLast ? '    ' : '│   ');
+        traverse(childNode as DirectoryNode, newPrefix);
+      }
+    });
   };
 
-  traverse(node, '', true, nameOverride);
+  if (node.type === 'directory') {
+    traverse(node as DirectoryNode, '');
+  }
+
   return lines.join('\n');
 };

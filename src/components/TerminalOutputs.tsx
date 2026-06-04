@@ -1,64 +1,98 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { profile, skills, projects, achievements, publications, currentlyLearning, experience, education, certifications, type Project } from '../data';
+import { generateSlug } from '../utils/fileSystem';
 
 // 1. HELP OUTPUT COMPONENT
 export const HelpOutput: React.FC = () => {
-  const commands = [
-    { cmd: 'help', desc: 'Show all available commands' },
-    { cmd: 'about', desc: 'About me' },
-    { cmd: 'skills', desc: 'Technical skills' },
-    { cmd: 'projects', desc: 'View my projects' },
-    { cmd: 'contact', desc: 'Contact information' },
-    { cmd: 'resume', desc: 'Resume summary and options' },
-    { cmd: 'view resume', desc: 'Display full resume in terminal' },
-    { cmd: 'download resume', desc: 'Download PDF resume' },
-    { cmd: 'social', desc: 'Social media links' },
-    { cmd: 'education', desc: 'Educational background' },
-    { cmd: 'experience', desc: 'Work experience' },
-    { cmd: 'certs', desc: 'Certifications' },
-    { cmd: 'achievements', desc: 'Achievements & Hackathons' },
-    { cmd: 'publications', desc: 'Research Publications' },
-    { cmd: 'learning', desc: 'Currently learning topics' },
-    { cmd: 'stack', desc: 'Technical stack breakdown' },
-    { cmd: 'clear', desc: 'Clear terminal' },
-    { cmd: 'whoami', desc: 'Fun command' },
-    { cmd: 'pwd', desc: 'Show current location' },
-    { cmd: 'ls', desc: 'List available files' },
-    { cmd: 'tree', desc: 'Show portfolio structure' },
-    { cmd: 'neofetch', desc: 'Display developer profile' },
-    { cmd: 'theme', desc: 'Switch terminal themes (ubuntu, matrix, dracula, kali)' },
+  const categories = [
+    {
+      title: "Navigation",
+      commands: [
+        { cmd: 'pwd', desc: 'Show current location' },
+        { cmd: 'ls', desc: 'List available files' },
+        { cmd: 'cd', desc: 'Change directory' },
+        { cmd: 'tree', desc: 'Show portfolio structure' },
+        { cmd: 'cat', desc: 'Read file contents' },
+        { cmd: 'clear', desc: 'Clear terminal' },
+      ]
+    },
+    {
+      title: "Profile",
+      commands: [
+        { cmd: 'about', desc: 'About me' },
+        { cmd: 'whoami', desc: 'Fun command identifying yourself' },
+        { cmd: 'neofetch', desc: 'Display developer profile' },
+        { cmd: 'resume', desc: 'Resume summary and options' },
+        { cmd: 'view resume', desc: 'Display full resume in terminal' },
+        { cmd: 'download resume', desc: 'Download PDF resume' },
+        { cmd: 'education', desc: 'Educational background' },
+        { cmd: 'experience', desc: 'Work experience' },
+        { cmd: 'contact', desc: 'Contact information' },
+        { cmd: 'github', desc: 'Open GitHub profile' },
+        { cmd: 'linkedin', desc: 'Open LinkedIn profile' },
+        { cmd: 'email', desc: 'Copy email address' },
+      ]
+    },
+    {
+      title: "Portfolio",
+      commands: [
+        { cmd: 'projects', desc: 'View my projects' },
+        { cmd: 'achievements', desc: 'Achievements & Hackathons' },
+        { cmd: 'publications', desc: 'Research Publications' },
+        { cmd: 'certs', desc: 'Certifications' },
+        { cmd: 'learning', desc: 'Currently learning topics' },
+        { cmd: 'stack', desc: 'Technical stack breakdown' },
+        { cmd: 'skills', desc: 'Technical skills' },
+      ]
+    },
+    {
+      title: "Utilities",
+      commands: [
+        { cmd: 'help', desc: 'Show all available commands' },
+        { cmd: 'theme', desc: 'Switch terminal themes' },
+        { cmd: 'analytics', desc: 'View portfolio statistics' },
+      ]
+    },
+    {
+      title: "Fun Commands",
+      commands: [
+        { cmd: 'coffee', desc: 'Brew a virtual coffee' },
+        { cmd: 'hack nasa', desc: 'Simulate a hacking sequence' },
+        { cmd: 'sudo hire-me', desc: 'Recruiter shortcut' },
+      ]
+    }
   ];
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-5 font-mono text-sm max-w-3xl">
       <div className="text-yellow-400 font-bold">Available commands:</div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1 font-mono text-sm max-w-2xl">
-        {commands.map((c, i) => (
-          <div key={i} className="flex">
-            <span className="text-[#8be9fd] w-28 flex-shrink-0 font-bold">{c.cmd}</span>
-            <span className="text-gray-300">- {c.desc}</span>
+      
+      {categories.map((category, idx) => (
+        <div key={idx} className="space-y-1">
+          <div className="text-[#ff79c6] font-bold mb-2 uppercase tracking-widest border-b border-gray-800 pb-1">
+            {category.title}
           </div>
-        ))}
-      </div>
-      <div className="text-xs text-gray-500 mt-2">
-        Pro tip: Navigation commands like <span className="text-[#50fa7b]">cd</span>, <span className="text-[#50fa7b]">ls [dir]</span>, <span className="text-[#50fa7b]">cat [file]</span>, <span className="text-[#50fa7b]">pwd</span>, and <span className="text-[#50fa7b]">tree</span> are also fully supported!
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
+            {category.commands.map((c, i) => (
+              <div key={i} className="flex">
+                <span className="text-[#8be9fd] w-36 flex-shrink-0 font-bold">{c.cmd}</span>
+                <span className="text-gray-300">- {c.desc}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      
+      <div className="text-xs text-gray-500 mt-4 border-t border-gray-800 border-dashed pt-3">
+        Pro tip: Navigation commands like <span className="text-[#50fa7b]">cd</span>, <span className="text-[#50fa7b]">ls [dir]</span>, <span className="text-[#50fa7b]">cat [file]</span>, <span className="text-[#50fa7b]">pwd</span>, and <span className="text-[#50fa7b]">tree</span> are fully supported!
       </div>
     </div>
   );
 };
 
 // 2. NEOFETCH OUTPUT COMPONENT
+// 2. NEOFETCH OUTPUT COMPONENT
 export const NeofetchOutput: React.FC = () => {
-  const [resolution, setResolution] = useState(`${window.innerWidth}x${window.innerHeight}`);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setResolution(`${window.innerWidth}x${window.innerHeight}`);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const asciiArt = `
       .---.
      /     \\
@@ -71,29 +105,59 @@ export const NeofetchOutput: React.FC = () => {
 `;
 
   return (
-    <div className="flex flex-col md:flex-row font-mono text-sm gap-6 p-2 leading-relaxed">
-      <div className="text-[#50fa7b] font-bold pre-formatted whitespace-pre select-none">
+    <div className="flex flex-col md:flex-row font-mono text-sm gap-6 p-2 leading-relaxed text-gray-300">
+      <div className="text-[#50fa7b] font-bold pre-formatted whitespace-pre select-none flex-shrink-0">
         {asciiArt}
       </div>
-      <div className="space-y-1">
-        <div className="text-[#ff79c6] font-bold text-base">guest@pradheeban-portfolio</div>
-        <div className="text-gray-400">--------------------------</div>
-        <div><span className="text-[#8be9fd] font-semibold">OS</span>: Linux Mint (Vercel Host)</div>
-        <div><span className="text-[#8be9fd] font-semibold">Host</span>: {profile.name}'s Digital Terminal</div>
-        <div><span className="text-[#8be9fd] font-semibold">Kernel</span>: React v19.2 + TypeScript</div>
-        <div><span className="text-[#8be9fd] font-semibold">Uptime</span>: 4m 20s (Active Session)</div>
-        <div><span className="text-[#8be9fd] font-semibold">Shell</span>: Antigravity-sh 1.2</div>
-        <div><span className="text-[#8be9fd] font-semibold">Resolution</span>: {resolution}</div>
-        <div><span className="text-[#8be9fd] font-semibold">DE</span>: Web Terminal UX</div>
-        <div><span className="text-[#8be9fd] font-semibold">WM</span>: TailwindCSS Engine</div>
-        <div><span className="text-[#8be9fd] font-semibold">Terminal</span>: Custom-React-Terminal</div>
-        <div><span className="text-[#8be9fd] font-semibold">CPU</span>: {profile.role} Brain (AMD Ryzen 9)</div>
-        <div><span className="text-[#8be9fd] font-semibold">Experience</span>: {profile.experienceYears} Years</div>
-        <div><span className="text-[#8be9fd] font-semibold">Location</span>: {profile.location}</div>
-        <div><span className="text-[#8be9fd] font-semibold">Interests</span>: Linux, Cloud, DevOps, Backend, AI</div>
+      
+      <div className="flex-1 w-full max-w-2xl">
+        <div className="text-[#ff79c6] font-bold text-base tracking-wide">pradheeban@portfolio</div>
+        <div className="text-gray-600 mb-2">--------------------</div>
         
+        <div className="space-y-1 mb-4">
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">OS</span><span className="mr-2 text-gray-500">:</span><span className="text-white">PortfolioOS v2026</span></div>
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Host</span><span className="mr-2 text-gray-500">:</span><span className="text-white">pradheeban.dev</span></div>
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Kernel</span><span className="mr-2 text-gray-500">:</span><span className="text-white">React 19 + TypeScript</span></div>
+        </div>
+
+        <div className="space-y-1 mb-4">
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Role</span><span className="mr-2 text-gray-500">:</span><span className="text-[#50fa7b] font-bold border border-[#50fa7b]/30 bg-[#50fa7b]/10 px-1.5 py-0.5 rounded text-[11px] uppercase tracking-wider">AI/ML Engineer</span></div>
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Experience</span><span className="mr-2 text-gray-500">:</span><span>Generative AI + Frontend Engineering</span></div>
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Research</span><span className="mr-2 text-gray-500">:</span><span className="text-[#ffb86c] font-bold border border-[#ffb86c]/30 bg-[#ffb86c]/10 px-1.5 py-0.5 rounded text-[11px] uppercase tracking-wider">IEEE Published Researcher</span></div>
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Projects</span><span className="mr-2 text-gray-500">:</span><span>PrepWise | ASTRA | Anomaly Detection</span></div>
+        </div>
+
+        <div className="mb-4">
+          <div className="flex"><span className="text-[#8be9fd] font-semibold w-32">Specialties</span><span className="mr-2 text-gray-500">:</span></div>
+          <ul className="pl-[8.5rem] space-y-0.5 -mt-5">
+            <li className="flex"><span className="text-gray-500 mr-2">•</span>LLM Applications</li>
+            <li className="flex"><span className="text-gray-500 mr-2">•</span>RAG Pipelines</li>
+            <li className="flex"><span className="text-gray-500 mr-2">•</span>Agentic AI Systems</li>
+            <li className="flex"><span className="text-gray-500 mr-2">•</span>Full-Stack Development</li>
+          </ul>
+        </div>
+
+        <div className="mb-4">
+          <div className="flex"><span className="text-[#8be9fd] font-semibold w-32">Achievements</span><span className="mr-2 text-gray-500">:</span></div>
+          <ul className="pl-[8.5rem] space-y-0.5 -mt-5">
+            <li className="flex"><span className="text-gray-500 mr-2">•</span>Top 30 / 250+ @ KGeN.io</li>
+            <li className="flex"><span className="text-gray-500 mr-2">•</span>Ideathon Winner</li>
+            <li className="flex"><span className="text-gray-500 mr-2">•</span>Multiple Hackathon Awards</li>
+          </ul>
+        </div>
+
+        <div className="space-y-1 mb-4 mt-2">
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Status</span><span className="mr-2 text-gray-500">:</span><span className="text-[#8be9fd] font-bold border border-[#8be9fd]/30 bg-[#8be9fd]/10 px-1.5 py-0.5 rounded text-[11px] uppercase tracking-wider">Open to Opportunities</span></div>
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Current Goal</span><span className="mr-2 text-gray-500">:</span><span className="text-white">Building Production AI Systems</span></div>
+        </div>
+
+        <div className="space-y-1 mb-4">
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Skills</span><span className="mr-2 text-gray-500">:</span><span>Python • React • Node.js • LangChain</span></div>
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Location</span><span className="mr-2 text-gray-500">:</span><span>India</span></div>
+        </div>
+
         {/* Color Blocks */}
-        <div className="flex gap-1.5 mt-3 select-none">
+        <div className="flex gap-1.5 mt-5 select-none">
           <span className="w-5 h-4 bg-black"></span>
           <span className="w-5 h-4 bg-[#ff5555]"></span>
           <span className="w-5 h-4 bg-[#50fa7b]"></span>
@@ -111,31 +175,19 @@ export const NeofetchOutput: React.FC = () => {
 // 3. SKILLS OUTPUT COMPONENT
 export const SkillsOutput: React.FC = () => {
   return (
-    <div className="space-y-4 font-mono text-sm max-w-xl">
-      <div className="text-yellow-400 font-bold">Technical Skills Index:</div>
-      {skills.map((skillGroup, idx) => {
-        // Calculate a mock percentage for visuals
-        let percentage = 90;
-        if (skillGroup.category.includes("Languages")) percentage = 95;
-        else if (skillGroup.category.includes("DevOps")) percentage = 85;
-        else if (skillGroup.category.includes("Databases")) percentage = 90;
-        
-        const barsCount = Math.floor(percentage / 5);
-        const barStr = '='.repeat(barsCount) + ' '.repeat(20 - barsCount);
-
-        return (
-          <div key={idx} className="space-y-1">
-            <div className="flex justify-between text-[#8be9fd] font-semibold">
-              <span>{skillGroup.category}</span>
-              <span>{percentage}%</span>
-            </div>
-            <div className="flex items-center gap-3 text-gray-300">
-              <span className="text-[#50fa7b]">[{barStr}]</span>
-              <span className="text-xs text-gray-400">({skillGroup.items.join(', ')})</span>
-            </div>
+    <div className="space-y-5 font-mono text-sm max-w-2xl">
+      <div className="text-yellow-400 font-bold mb-1">Technical Skills Index</div>
+      {skills.map((skillGroup, idx) => (
+        <div key={idx} className="space-y-1.5">
+          <div className="text-[#8be9fd] font-bold">
+            <span className="text-[#50fa7b] mr-2">►</span>
+            {skillGroup.category}
           </div>
-        );
-      })}
+          <div className="text-gray-300 break-words leading-relaxed">
+            {skillGroup.items.join(' • ')}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
@@ -199,13 +251,13 @@ export const ProjectsOutput: React.FC<ProjectsOutputProps> = ({ project }) => {
             </div>
             <p className="text-xs text-gray-400 mt-1">{proj.description}</p>
             <div className="text-xs text-[#8be9fd] mt-1.5">
-              Read: <code className="text-[#50fa7b] font-bold bg-gray-900 px-1 rounded">cat projects/project{idx + 1}.md</code>
+              Read: <code className="text-[#50fa7b] font-bold bg-gray-900 px-1 rounded">cat projects/{generateSlug(proj.name)}.md</code>
             </div>
           </div>
         ))}
       </div>
       <div className="text-xs text-gray-500 mt-2">
-        Type <span className="text-[#50fa7b]">ls projects</span> to view the projects directory, or use <span className="text-[#50fa7b]">cat projects/project1.md</span> to view the raw markdown.
+        Type <span className="text-[#50fa7b]">ls projects</span> to view the projects directory, then use <span className="text-[#50fa7b]">cat projects/&lt;project-name&gt;.md</span> to inspect a project.
       </div>
     </div>
   );
@@ -214,67 +266,128 @@ export const ProjectsOutput: React.FC<ProjectsOutputProps> = ({ project }) => {
 // 5. SUDO HIRE ME OUTPUT COMPONENT
 export const SudoHireMeOutput: React.FC = () => {
   return (
-    <div className="space-y-3 font-mono text-sm border border-emerald-500/30 bg-emerald-950/20 p-4 rounded max-w-xl">
+    <div className="space-y-4 font-mono text-sm border border-emerald-500/30 bg-emerald-950/20 p-4 rounded max-w-xl">
       <div className="text-emerald-400 font-bold flex items-center gap-2">
         <span>Access Granted ✅</span>
       </div>
       
-      <div className="text-yellow-300 font-semibold text-base mt-2">Why Hire Me?</div>
-      <ul className="space-y-2 text-gray-200">
-        <li className="flex items-start gap-2">
-          <span className="text-[#50fa7b] font-bold">✔</span>
-          <span><strong>Strong Problem-Solving:</strong> Experience design in backend distributed architectures, cloud orchestration, and automated test frameworks.</span>
-        </li>
-        <li className="flex items-start gap-2">
-          <span className="text-[#50fa7b] font-bold">✔</span>
-          <span><strong>Passionate Learner:</strong> Keeping on top of recent trends including container orchestrations, cloud architecture, and modern application state.</span>
-        </li>
-        <li className="flex items-start gap-2">
-          <span className="text-[#50fa7b] font-bold">✔</span>
-          <span><strong>Modern Development Stack:</strong> Expert workflow involving Git, Docker, Kubernetes, React/TS, and Node.js.</span>
-        </li>
-        <li className="flex items-start gap-2">
-          <span className="text-[#50fa7b] font-bold">✔</span>
-          <span><strong>Linux Enthusiast:</strong> Deep understanding of UNIX models, terminal automation, shell scripting, and self-hosted environments.</span>
-        </li>
-      </ul>
+      <div>
+        <div className="text-yellow-300 font-semibold text-base mb-2 border-b border-emerald-500/30 pb-1 inline-block">Why Hire Me?</div>
+        <ul className="space-y-2 text-gray-200">
+          <li className="flex items-start gap-2">
+            <span className="text-[#50fa7b] font-bold">✔</span>
+            <span><strong className="text-white">AI/ML Engineering:</strong> Expertise in Generative AI, RAG pipelines, Agentic systems, and LLM applications.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#50fa7b] font-bold">✔</span>
+            <span><strong className="text-white">Research & Innovation:</strong> IEEE-published researcher with 2 active publications pushing the boundaries of AI.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#50fa7b] font-bold">✔</span>
+            <span><strong className="text-white">Real-World Engineering:</strong> Industry experience at Telesoft Technologies building software for Cybersecurity & Telecom.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#50fa7b] font-bold">✔</span>
+            <span><strong className="text-white">Full-Stack Development:</strong> Strong foundation in React, TypeScript, Node.js, REST APIs, and modern architectures.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#50fa7b] font-bold">✔</span>
+            <span><strong className="text-white">Problem Solver:</strong> Proven track record as a multiple hackathon/ideathon winner and Top 30 @ KGeN.io out of 250+.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#50fa7b] font-bold">✔</span>
+            <span><strong className="text-white">Continuous Learner:</strong> Always exploring cutting-edge AI developments and transitioning research to production.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="border border-emerald-500/20 bg-black/40 p-3 rounded">
+        <div className="text-[#8be9fd] font-bold mb-1">Recruiter Summary:</div>
+        <div className="grid grid-cols-[140px_1fr] gap-y-1 text-gray-300">
+          <span className="text-[#ffb86c]">Publications</span>
+          <span>: 2</span>
+          <span className="text-[#ffb86c]">Projects</span>
+          <span>: 3+ (PrepWise, ASTRA, Anomaly Detection)</span>
+          <span className="text-[#ffb86c]">Industry Exp.</span>
+          <span>: Cybersecurity & Telecom</span>
+          <span className="text-[#ffb86c]">Specialization</span>
+          <span>: AI/ML Engineering</span>
+          <span className="text-[#ffb86c]">Status</span>
+          <span className="text-[#50fa7b] font-bold">: Open to Opportunities 🚀</span>
+        </div>
+      </div>
+
       <div className="text-xs text-gray-400 mt-3 border-t border-emerald-500/20 pt-2 flex justify-between items-center">
         <span>Pradheeban - Developer Portfolio</span>
-        <span className="text-emerald-400 font-bold">ready_for_action</span>
+        <span className="text-emerald-400 font-bold animate-pulse">open_to_opportunities</span>
       </div>
     </div>
   );
 };
 
 const coffeeSteps = [
-  { text: 'Brewing coffee ☕...', delay: 0 },
-  { text: '  [ ] Grinding fresh coffee beans...', delay: 800 },
-  { text: '  [..] Heating pure filtered water...', delay: 1600 },
-  { text: '  [::] Dripping double shot espresso...', delay: 2400 },
-  { text: 'Done. Enjoy your freshly brewed hot cup of coffee! ☕', delay: 3200 }
+  { text: '[✓] Grinding beans', delay: 800 },
+  { text: '[✓] Heating water', delay: 1600 },
+  { text: '[✓] Extracting espresso', delay: 2400 },
+  { text: '[✓] Pouring coffee', delay: 3200 }
 ];
 
-// 6. COFFEE BREWING ANIMATION COMPONENT
-export const CoffeeOutput: React.FC = () => {
+interface CoffeeOutputProps {
+  onComplete?: () => void;
+}
 
+// 6. COFFEE BREWING ANIMATION COMPONENT
+export const CoffeeOutput: React.FC<CoffeeOutputProps> = ({ onComplete }) => {
   const [displayedSteps, setDisplayedSteps] = useState<string[]>([]);
+  const completedRef = useRef(false);
 
   useEffect(() => {
+    let isCancelled = false;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
     coffeeSteps.forEach((s) => {
       const timer = setTimeout(() => {
-        setDisplayedSteps((prev) => [...prev, s.text]);
+        if (!isCancelled) {
+          setDisplayedSteps((prev) => {
+            if (!prev.includes(s.text)) return [...prev, s.text];
+            return prev;
+          });
+        }
       }, s.delay);
-      return () => clearTimeout(timer);
+      timers.push(timer);
     });
+
+    return () => {
+      isCancelled = true;
+      timers.forEach(clearTimeout);
+    };
   }, []);
 
+  useEffect(() => {
+    if (displayedSteps.length === coffeeSteps.length && onComplete && !completedRef.current) {
+      completedRef.current = true;
+      onComplete();
+    }
+  }, [displayedSteps, onComplete]);
+
   return (
-    <div className="space-y-1 font-mono text-sm text-[#ffb86c]">
-      {displayedSteps.map((line, idx) => (
-        <div key={idx} className={idx === displayedSteps.length - 1 ? "text-emerald-400 font-bold" : ""}>
-          {line}
+    <div className="space-y-2 font-mono text-sm max-w-lg mt-1">
+      <div className="text-[#8be9fd] mb-3">Initializing Coffee Engine v1.0...</div>
+      
+      {displayedSteps.length > 0 && (
+        <div className="space-y-1 text-gray-300">
+          {displayedSteps.map((line, idx) => (
+            <div key={idx}>{line}</div>
+          ))}
         </div>
-      ))}
+      )}
+
+      {displayedSteps.length === coffeeSteps.length && (
+        <div className="mt-4 pt-2 border-t border-gray-800 space-y-1">
+          <div className="text-[#50fa7b] font-bold">Coffee successfully brewed ☕</div>
+          <div className="text-[#ff79c6] font-bold">Productivity increased +25%</div>
+        </div>
+      )}
     </div>
   );
 };
@@ -296,14 +409,79 @@ export const AchievementsOutput: React.FC = () => {
 
 // 8. PUBLICATIONS OUTPUT COMPONENT
 export const PublicationsOutput: React.FC = () => {
+  const [openAbstract, setOpenAbstract] = useState<number | null>(null);
+
   return (
-    <div className="space-y-4 font-mono text-sm text-gray-200">
-      <div className="text-[#8be9fd] font-bold">Research Publications:</div>
+    <div className="space-y-6 font-mono text-sm text-gray-200 max-w-3xl">
+      <div className="text-[#8be9fd] font-bold tracking-widest border-b border-gray-800 pb-2">
+        RESEARCH PUBLICATIONS
+      </div>
+
       {publications.map((pub, idx) => (
-        <div key={idx} className="border-l border-[#ff79c6] pl-3 py-1 space-y-1">
-          <div className="text-[#50fa7b] font-bold leading-relaxed">{pub.title}</div>
-          <div className="text-xs text-gray-300">Published in: <span className="font-semibold text-white">{pub.publisher}</span> ({pub.year})</div>
-          <div className="text-xs text-[#8be9fd]">DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer" className="hover:underline">{pub.doi}</a></div>
+        <div
+          key={idx}
+          className="border-l-2 border-[#ff79c6] pl-4 py-1 space-y-3"
+        >
+          <div className="space-y-1">
+            <div className="text-[#50fa7b] font-bold leading-relaxed break-words">
+              {pub.title}
+            </div>
+
+            <div className="text-xs text-gray-300 flex flex-wrap gap-x-4 gap-y-1">
+              <div>
+                Published in:{" "}
+                <span className="font-semibold text-white">
+                  {pub.publisher}
+                </span>{" "}
+                ({pub.year})
+              </div>
+              <div className="text-[#8be9fd]">
+                DOI:{" "}
+                <a
+                  href={`https://doi.org/${pub.doi}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline inline-flex items-center gap-1"
+                >
+                  🔗 {pub.doi}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Summary */}
+          <div className="space-y-1">
+            <div className="text-[#ff79c6] font-semibold text-xs tracking-wide">Summary:</div>
+            <div className="text-gray-300 leading-relaxed text-sm">
+              {pub.summary}
+            </div>
+          </div>
+
+          {/* Terminal-style toggle */}
+          <div>
+            <button
+              onClick={() =>
+                setOpenAbstract(openAbstract === idx ? null : idx)
+              }
+              className="text-[#f1fa8c] font-mono font-bold text-xs hover:text-white transition-colors duration-200"
+            >
+              {openAbstract === idx
+                ? "$ collapse abstract"
+                : "$ cat abstract.txt"}
+            </button>
+          </div>
+
+          {/* Abstract */}
+          <div 
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              openAbstract === idx ? 'max-h-[1000px] opacity-100 mt-2' : 'max-h-0 opacity-0 mt-0'
+            }`}
+          >
+            <div className="bg-[#0f1419] border border-gray-800 rounded p-4 text-sm text-gray-400 leading-loose shadow-inner">
+              <div className="text-[#8be9fd] font-bold mb-2 text-xs uppercase tracking-widest border-b border-gray-800 pb-1 inline-block">Abstract</div>
+              <div className="text-gray-300">{pub.abstract}</div>
+            </div>
+          </div>
         </div>
       ))}
     </div>
@@ -469,6 +647,42 @@ export const ViewResumeOutput: React.FC = () => {
       {/* End */}
       <div className="text-center text-gray-600 text-xs mt-8 pt-4 border-t border-gray-800 border-dashed">
         EOF
+      </div>
+    </div>
+  );
+};
+
+// 13. WHOAMI OUTPUT COMPONENT
+export const WhoAmIOutput: React.FC = () => {
+  return (
+    <div className="font-mono text-sm max-w-lg space-y-4 bg-gray-900/40 p-4 rounded-md border border-gray-700/50 shadow-sm relative overflow-hidden mt-1">
+      <div className="absolute top-0 left-0 w-1 h-full bg-[#50fa7b]"></div>
+      
+      <div className="flex items-center gap-2 text-xs text-gray-400 mb-2 border-b border-gray-800/60 pb-2">
+        <span className="text-[#50fa7b] animate-pulse">●</span>
+        <span className="tracking-widest uppercase font-semibold">Authentication Successful</span>
+      </div>
+
+      <div className="text-[#8be9fd] font-bold text-base mt-2">
+        recruiter@pradheeban.dev
+      </div>
+
+      <div className="space-y-1 mt-4">
+        <div className="flex">
+          <span className="w-32 text-[#ffb86c]">Access Level</span>
+          <span className="text-gray-400 mr-2">:</span>
+          <span className="text-gray-200">Portfolio Explorer</span>
+        </div>
+        <div className="flex">
+          <span className="w-32 text-[#ffb86c]">Current Task</span>
+          <span className="text-gray-400 mr-2">:</span>
+          <span className="text-gray-200">Evaluating Candidate</span>
+        </div>
+        <div className="flex">
+          <span className="w-32 text-[#ffb86c]">Status</span>
+          <span className="text-gray-400 mr-2">:</span>
+          <span className="text-[#ff79c6] font-bold">Looking for reasons to hire</span>
+        </div>
       </div>
     </div>
   );

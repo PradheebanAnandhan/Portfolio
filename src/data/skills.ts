@@ -6,7 +6,7 @@ export interface SkillGroup {
 export const skills: SkillGroup[] = [
   {
     category: "Programming Languages",
-    items: ["C", "C++", "Python", "Java"]
+    items: ["C", "C++", "Python"]
   },
   {
     category: "Generative AI",
@@ -18,6 +18,6 @@ export const skills: SkillGroup[] = [
   },
   {
     category: "Core & Data",
-    items: ["Machine Learning", "Deep Learning", "NLP", "Transformers", "SQL", "MongoDB", "DSA"]
+    items: ["Machine Learning", "Deep Learning", "NLP", "Transformers", "MCP","Docker"]
   }
 ];

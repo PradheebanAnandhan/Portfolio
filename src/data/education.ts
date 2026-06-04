@@ -7,7 +7,7 @@ export interface Education {
 
 export const education: Education[] = [
   {
-    degree: "B.E (CSE - AIML) | CGPA: 8.0",
+    degree: "B.E (CSE - AIML) | CGPA: 8.1",
     institution: "Sri Eshwar College of Engineering",
     period: "2022 - 2026",
     details: "Focusing on Artificial Intelligence and Machine Learning."

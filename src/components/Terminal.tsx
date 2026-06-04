@@ -20,6 +20,7 @@ export const Terminal: React.FC<TerminalProps> = ({ theme, setTheme }) => {
     historyIndex,
     setHistoryIndex,
     getSuggestions,
+    isExecuting,
   } = useTerminal(setTheme);
 
   // Auto-scroll to bottom of the terminal on new line addition
@@ -202,33 +203,35 @@ export const Terminal: React.FC<TerminalProps> = ({ theme, setTheme }) => {
         ))}
 
         {/* Current Command Prompt input line */}
-        <div className="flex items-center leading-relaxed relative">
-          <span className={`${style.promptUser}`}>guest@pradheeban</span>
-          <span className="text-gray-400 mx-1">:</span>
-          <span className={`${style.promptPath}`}>{currentPath}</span>
-          <span className="text-gray-300 mx-1">$</span>
-          
-          <div className="flex-1 relative flex items-center pl-1">
-            {/* Input Overlay for suggestions */}
-            <div className="absolute inset-y-0 left-1 flex items-center pointer-events-none">
-              <span className="text-transparent select-none">{currentInput}</span>
-              <span className="text-gray-500 opacity-60 font-semibold select-none">{inlineSuggestion}</span>
-            </div>
+        {!isExecuting && (
+          <div className="flex items-center leading-relaxed relative">
+            <span className={`${style.promptUser}`}>guest@pradheeban</span>
+            <span className="text-gray-400 mx-1">:</span>
+            <span className={`${style.promptPath}`}>{currentPath}</span>
+            <span className="text-gray-300 mx-1">$</span>
+            
+            <div className="flex-1 relative flex items-center pl-1">
+              {/* Input Overlay for suggestions */}
+              <div className="absolute inset-y-0 left-1 flex items-center pointer-events-none">
+                <span className="text-transparent select-none">{currentInput}</span>
+                <span className="text-gray-500 opacity-60 font-semibold select-none">{inlineSuggestion}</span>
+              </div>
 
-            <input
-              ref={inputRef}
-              type="text"
-              value={currentInput}
-              onChange={(e) => setCurrentInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className={`w-full bg-transparent border-none outline-none focus:ring-0 p-0 font-mono text-xs md:text-sm font-bold caret-current ${style.inputAccent}`}
-              autoComplete="off"
-              autoCapitalize="none"
-              autoCorrect="off"
-              spellCheck="false"
-            />
+              <input
+                ref={inputRef}
+                type="text"
+                value={currentInput}
+                onChange={(e) => setCurrentInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className={`w-full bg-transparent border-none outline-none focus:ring-0 p-0 font-mono text-xs md:text-sm font-bold caret-current ${style.inputAccent}`}
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Scroll Anchor */}
         <div ref={terminalEndRef} />
