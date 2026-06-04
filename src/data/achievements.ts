@@ -21,6 +21,6 @@ export const achievements: Achievement[] = [
   },
   {
     title: "Competitive Programming",
-    details: "Active on LeetCode, HackerRank, and CodeChef"
+    details: "Active on LeetCode, HackerRank and CodeChef"
   }
 ];

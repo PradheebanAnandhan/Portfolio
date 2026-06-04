@@ -20,10 +20,10 @@ export const projects: Project[] = [
   {
     id: "prepwise",
     name: "PrepWise",
-    description: "Built an AI-driven platform to help students improve resumes, match job roles, and practice interviews through voice-based simulations.",
+    description: "Built an AI-driven platform to help students improve resumes, match job roles and practice interviews through voice-based simulations.",
     technologies: ["Agentic AI", "LLMs", "NLP", "React.js"],
     githubUrl: "https://github.com/PradheebanAnandhan/PrepWise",
-    content: `* Project name: PrepWise\n* Description: Built an AI-driven platform to help students improve resumes, match job roles, and practice interviews through voice-based simulations. Designed a multi-agent system using NLP and LLMs to provide personalized feedback and interview coaching, enhancing candidate preparation and confidence.\n* Technologies used: Agentic AI, LLMs, NLP, React.js`
+    content: `* Project name: PrepWise\n* Description: Built an AI-driven platform to help students improve resumes, match job roles and practice interviews through voice-based simulations. Designed a multi-agent system using NLP and LLMs to provide personalized feedback and interview coaching, enhancing candidate preparation and confidence.\n* Technologies used: Agentic AI, LLMs, NLP, React.js`
   },
   {
     id: "astra",

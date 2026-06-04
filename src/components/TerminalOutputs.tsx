@@ -69,7 +69,7 @@ export const HelpOutput: React.FC = () => {
   return (
     <div className="space-y-5 font-mono text-sm max-w-3xl">
       <div className="text-yellow-400 font-bold">Available commands:</div>
-      
+
       {categories.map((category, idx) => (
         <div key={idx} className="space-y-1">
           <div className="text-[#ff79c6] font-bold mb-2 uppercase tracking-widest border-b border-gray-800 pb-1">
@@ -85,9 +85,9 @@ export const HelpOutput: React.FC = () => {
           </div>
         </div>
       ))}
-      
+
       <div className="text-xs text-gray-500 mt-4 border-t border-gray-800 border-dashed pt-3">
-        Pro tip: Navigation commands like <span className="text-[#50fa7b]">cd</span>, <span className="text-[#50fa7b]">ls [dir]</span>, <span className="text-[#50fa7b]">cat [file]</span>, <span className="text-[#50fa7b]">pwd</span>, and <span className="text-[#50fa7b]">tree</span> are fully supported!
+        Pro tip: Navigation commands like <span className="text-[#50fa7b]">cd</span>, <span className="text-[#50fa7b]">ls [dir]</span>, <span className="text-[#50fa7b]">cat [file]</span>, <span className="text-[#50fa7b]">pwd</span> and <span className="text-[#50fa7b]">tree</span> are fully supported!
       </div>
     </div>
   );
@@ -111,11 +111,11 @@ export const NeofetchOutput: React.FC = () => {
       <div className="text-[#50fa7b] font-bold pre-formatted whitespace-pre select-none flex-shrink-0">
         {asciiArt}
       </div>
-      
+
       <div className="flex-1 w-full max-w-2xl">
         <div className="text-[#ff79c6] font-bold text-base tracking-wide">pradheeban@portfolio</div>
         <div className="text-gray-600 mb-2">--------------------</div>
-        
+
         <div className="space-y-1 mb-4">
           <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">OS</span><span className="mr-2 text-gray-500">:</span><span className="text-white">PortfolioOS v2026</span></div>
           <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Host</span><span className="mr-2 text-gray-500">:</span><span className="text-white">pradheeban.dev</span></div>
@@ -278,13 +278,13 @@ export const SudoHireMeOutput: React.FC = () => {
       <div className="text-emerald-400 font-bold flex items-center gap-2">
         <span>Access Granted ✅</span>
       </div>
-      
+
       <div>
         <div className="text-yellow-300 font-semibold text-base mb-2 border-b border-emerald-500/30 pb-1 inline-block">Why Hire Me?</div>
         <ul className="space-y-2 text-gray-200">
           <li className="flex items-start gap-2">
             <span className="text-[#50fa7b] font-bold">✔</span>
-            <span><strong className="text-white">AI/ML Engineering:</strong> Expertise in Generative AI, RAG pipelines, Agentic systems, and LLM applications.</span>
+            <span><strong className="text-white">AI/ML Engineering:</strong> Expertise in Generative AI, RAG pipelines, Agentic systems and LLM applications.</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[#50fa7b] font-bold">✔</span>
@@ -296,7 +296,7 @@ export const SudoHireMeOutput: React.FC = () => {
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[#50fa7b] font-bold">✔</span>
-            <span><strong className="text-white">Full-Stack Development:</strong> Strong foundation in React, TypeScript, Node.js, REST APIs, and modern architectures.</span>
+            <span><strong className="text-white">Full-Stack Development:</strong> Strong foundation in React, TypeScript, Node.js, REST APIs and modern architectures.</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[#50fa7b] font-bold">✔</span>
@@ -381,7 +381,7 @@ export const CoffeeOutput: React.FC<CoffeeOutputProps> = ({ onComplete }) => {
   return (
     <div className="space-y-2 font-mono text-sm max-w-lg mt-1">
       <div className="text-[#8be9fd] mb-3">Initializing Coffee Engine v1.0...</div>
-      
+
       {displayedSteps.length > 0 && (
         <div className="space-y-1 text-gray-300">
           {displayedSteps.map((line, idx) => (
@@ -480,10 +480,9 @@ export const PublicationsOutput: React.FC = () => {
           </div>
 
           {/* Abstract */}
-          <div 
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              openAbstract === idx ? 'max-h-[1000px] opacity-100 mt-2' : 'max-h-0 opacity-0 mt-0'
-            }`}
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${openAbstract === idx ? 'max-h-[1000px] opacity-100 mt-2' : 'max-h-0 opacity-0 mt-0'
+              }`}
           >
             <div className="bg-[#0f1419] border border-gray-800 rounded p-4 text-sm text-gray-400 leading-loose shadow-inner">
               <div className="text-[#8be9fd] font-bold mb-2 text-xs uppercase tracking-widest border-b border-gray-800 pb-1 inline-block">Abstract</div>
@@ -513,7 +512,7 @@ export const LearningOutput: React.FC = () => {
   );
 };
 
-// 10. STACK OUTPUT COMPONENT — shows tooling, frameworks, and dev environment
+// 10. STACK OUTPUT COMPONENT — shows tooling, frameworks and dev environment
 export const StackOutput: React.FC = () => {
   const stackGroups = [
     {
@@ -546,7 +545,7 @@ export const StackOutput: React.FC = () => {
   return (
     <div className="space-y-4 font-mono text-sm max-w-2xl">
       <div className="text-[#50fa7b] font-bold tracking-widest border-b border-gray-800 pb-1">TECH STACK</div>
-      <div className="text-gray-500 text-xs mb-2">Tools, frameworks, and environments I actively work with.</div>
+      <div className="text-gray-500 text-xs mb-2">Tools, frameworks and environments I actively work with.</div>
       <div className="space-y-3">
         {stackGroups.map((group, i) => (
           <div key={i} className="grid grid-cols-[160px_1fr] items-start">
@@ -674,7 +673,7 @@ export const ViewResumeOutput: React.FC = () => {
           ))}
         </div>
       </div>
-      
+
       {/* End */}
       <div className="text-center text-gray-600 text-xs mt-8 pt-4 border-t border-gray-800 border-dashed">
         EOF
@@ -688,7 +687,7 @@ export const WhoAmIOutput: React.FC = () => {
   return (
     <div className="font-mono text-sm max-w-lg space-y-4 bg-gray-900/40 p-4 rounded-md border border-gray-700/50 shadow-sm relative overflow-hidden mt-1">
       <div className="absolute top-0 left-0 w-1 h-full bg-[#50fa7b]"></div>
-      
+
       <div className="flex items-center gap-2 text-xs text-gray-400 mb-2 border-b border-gray-800/60 pb-2">
         <span className="text-[#50fa7b] animate-pulse">●</span>
         <span className="tracking-widest uppercase font-semibold">Authentication Successful</span>

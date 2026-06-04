@@ -30,7 +30,7 @@
 
 Most developer portfolios look the same — hero section, projects grid, contact form. This one doesn't.
 
-**pradheeban.dev** is a fully interactive, Linux terminal-style portfolio website. Instead of clicking through static pages, visitors explore my profile by running real terminal commands. It simulates a complete shell environment with a virtual filesystem, command history, tab autocomplete, and multiple terminal themes.
+**pradheeban.dev** is a fully interactive, Linux terminal-style portfolio website. Instead of clicking through static pages, visitors explore my profile by running real terminal commands. It simulates a complete shell environment with a virtual filesystem, command history, tab autocomplete and multiple terminal themes.
 
 Built to stand out. Built to be memorable. Built by an **AI/ML Engineer and IEEE-published researcher** who cares about the craft.
 
@@ -58,7 +58,7 @@ Status       : Looking for reasons to hire
 
 ### 🤖 AI/ML Engineer Profile
 - IEEE-published researcher with 2 peer-reviewed publications
-- Projects covering Generative AI, RAG pipelines, Agentic AI, and NLP
+- Projects covering Generative AI, RAG pipelines, Agentic AI and NLP
 - Industry experience at Telesoft Technologies (Cybersecurity & Telecom)
 - Multiple hackathon and ideathon winner
 
@@ -307,7 +307,7 @@ The project is also a direct expression of my engineering identity — someone w
 
 ## 🤝 Contributing
 
-This is a personal portfolio, but feedback, bug reports, and suggestions are welcome!
+This is a personal portfolio, but feedback, bug reports and suggestions are welcome!
 
 ```bash
 # Fork the repo
