@@ -572,7 +572,7 @@ export const ResumeSummaryOutput: React.FC = () => {
         <div className="space-y-1">
           <div><span className="text-[#8be9fd] font-bold">Name:</span> {profile.name}</div>
           <div><span className="text-[#8be9fd] font-bold">Role:</span> {profile.role}</div>
-          <div><span className="text-[#8be9fd] font-bold">Experience:</span> {experience.length > 0 ? `${new Date().getFullYear() - parseInt(experience[experience.length - 1].period.split(' ')[2] || String(new Date().getFullYear()))}+ Years` : '1+ Years'}</div>
+          <div><span className="text-[#8be9fd] font-bold">Experience:</span> {experience.length > 0 ? `${Math.max(1, new Date().getFullYear() - parseInt(experience[experience.length - 1].period.match(/\b\d{4}\b/)?.[0] || String(new Date().getFullYear())))}+ Years` : '1+ Years'}</div>
         </div>
         <div className="space-y-1">
           <div><span className="text-[#50fa7b] font-bold">Projects:</span> {projects.length}</div>
