@@ -20,7 +20,7 @@
 [![Supabase](https://img.shields.io/badge/Supabase-2.0-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-[**🌐 Live Demo**](https://pradheeban.dev) · [**📄 View Resume**](https://pradheeban.dev) · [**📧 Contact**](mailto:pradheebananand@gmail.com)
+[**🌐 Live Demo**](https://pradheeban.vercel.app) · [**📄 View Resume**](https://pradheeban.vercel.app) · [**📧 Contact**](mailto:pradheebananand@gmail.com)
 
 </div>
 
@@ -30,14 +30,14 @@
 
 Most developer portfolios look the same — hero section, projects grid, contact form. This one doesn't.
 
-**pradheeban.dev** is a fully interactive, Linux terminal-style portfolio website. Instead of clicking through static pages, visitors explore my profile by running real terminal commands. It simulates a complete shell environment with a virtual filesystem, command history, tab autocomplete and multiple terminal themes.
+**pradheeban.vercel.app** is a fully interactive, Linux terminal-style portfolio website. Instead of clicking through static pages, visitors explore my profile by running real terminal commands. It simulates a complete shell environment with a virtual filesystem, command history, tab autocomplete and multiple terminal themes.
 
 Built to stand out. Built to be memorable. Built by an **AI/ML Engineer and IEEE-published researcher** who cares about the craft.
 
 ```bash
 guest@pradheeban:~$ whoami
 
-recruiter@pradheeban.dev
+recruiter@pradheeban.vercel.app
 
 Access Level : Portfolio Explorer
 Current Task : Evaluating Candidate
@@ -76,7 +76,7 @@ Status       : Looking for reasons to hire
 
 ## 🚀 Demo
 
-> **Live at [pradheeban.dev](https://pradheeban.dev)**
+> **Live at [pradheeban.vercel.app](https://pradheeban.vercel.app)**
 
 ### Quick Start Commands for Recruiters
 
@@ -333,7 +333,7 @@ MIT License — feel free to fork and adapt for your own terminal portfolio. A s
 
 <div align="center">
 
-**Built with 🖤 by [Pradheeban A](https://pradheeban.dev)**
+**Built with 🖤 by [Pradheeban A](https://pradheeban.vercel.app)**
 
 *AI/ML Engineer · IEEE Researcher · Full-Stack Developer*
 

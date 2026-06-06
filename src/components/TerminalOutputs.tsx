@@ -118,7 +118,7 @@ export const NeofetchOutput: React.FC = () => {
 
         <div className="space-y-1 mb-4">
           <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">OS</span><span className="mr-2 text-gray-500">:</span><span className="text-white">PortfolioOS v2026</span></div>
-          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Host</span><span className="mr-2 text-gray-500">:</span><span className="text-white">pradheeban.dev</span></div>
+          <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Host</span><span className="mr-2 text-gray-500">:</span><span className="text-white">pradheeban.vercel.app</span></div>
           <div className="flex items-center"><span className="text-[#8be9fd] font-semibold w-32">Kernel</span><span className="mr-2 text-gray-500">:</span><span className="text-white">React 19 + TypeScript</span></div>
         </div>
 
@@ -694,7 +694,7 @@ export const WhoAmIOutput: React.FC = () => {
       </div>
 
       <div className="text-[#8be9fd] font-bold text-base mt-2">
-        recruiter@pradheeban.dev
+        recruiter@pradheeban.vercel.app
       </div>
 
       <div className="space-y-1 mt-4">

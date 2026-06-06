@@ -30,7 +30,7 @@ export const useTerminal = (
             Welcome to Pradheeban's Terminal Portfolio
           </div>
           <div className="text-gray-400 text-xs">
-            You are logged in as: <span className="text-[#8be9fd] font-bold">recruiter@pradheeban.dev</span>
+            You are logged in as: <span className="text-[#8be9fd] font-bold">recruiter@pradheeban.vercel.app</span>
           </div>
           <div className="space-y-1">
             <div className="text-[#ff79c6] font-semibold text-xs uppercase tracking-widest mb-1">Quick Start</div>
